@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.io/kaustavray21/file-auditor-checklist",
+  "homepage": "https://kaustavray21.github.io/file-auditor-checklist/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
