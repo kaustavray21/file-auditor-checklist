@@ -11,6 +11,41 @@ export function PrintPreview({
     return (
         <div className="min-h-screen bg-[#fdfbf7] font-sans">
             <style>{`
+        /* PDF Generation Fix: Override oklch colors with RGB equivalents for html2canvas compatibility */
+        #pdf-content, #pdf-content * {
+          --color-white: #ffffff;
+          --color-stone-50: #fafaf9;
+          --color-stone-100: #f5f5f4;
+          --color-stone-200: #e7e5e4;
+          --color-stone-300: #d6d3d1;
+          --color-stone-400: #a8a29e;
+          --color-stone-500: #78716c;
+          --color-stone-600: #57534e;
+          --color-stone-700: #44403c;
+          --color-stone-800: #292524;
+          --color-stone-900: #1c1917;
+          --color-blue-50: #eff6ff;
+          --color-blue-600: #2563eb;
+          --color-blue-700: #1d4ed8;
+          --color-red-500: #ef4444;
+        }
+        #pdf-content {
+          background-color: #ffffff !important;
+          color: #1c1917 !important;
+        }
+        #pdf-content .bg-white { background-color: #ffffff !important; }
+        #pdf-content .bg-stone-50 { background-color: #fafaf9 !important; }
+        #pdf-content .bg-stone-100 { background-color: #f5f5f4 !important; }
+        #pdf-content .bg-blue-50 { background-color: #eff6ff !important; }
+        #pdf-content .text-stone-400 { color: #a8a29e !important; }
+        #pdf-content .text-stone-500 { color: #78716c !important; }
+        #pdf-content .text-stone-600 { color: #57534e !important; }
+        #pdf-content .text-stone-900 { color: #1c1917 !important; }
+        #pdf-content .text-blue-600 { color: #2563eb !important; }
+        #pdf-content .text-blue-700 { color: #1d4ed8 !important; }
+        #pdf-content .border-stone-100 { border-color: #f5f5f4 !important; }
+        #pdf-content .border-stone-200 { border-color: #e7e5e4 !important; }
+        
         @media print {
           .no-print { display: none !important; }
           body { background-color: white !important; -webkit-print-color-adjust: exact; }
@@ -53,51 +88,60 @@ export function PrintPreview({
             </div>
 
             <div className="max-w-4xl mx-auto my-8 print:my-0">
-                <div id="pdf-content" className="print-container bg-white p-8 rounded-xl shadow-sm border border-stone-200">
-                    <div className="border-b border-stone-200 pb-4 mb-4">
-                        <div className="flex justify-between items-start">
+                <div id="pdf-content" style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '0.75rem', border: '1px solid #e7e5e4' }}>
+                    <div style={{ borderBottom: '1px solid #e7e5e4', paddingBottom: '1rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div>
-                                <h1 className="text-2xl font-bold text-stone-900 mb-1">File Audit Report</h1>
-                                <p className="text-stone-500 text-sm">Generated Checklist & Audit Trail</p>
+                                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1c1917', marginBottom: '0.25rem' }}>File Audit Report</h1>
+                                <p style={{ color: '#78716c', fontSize: '0.875rem' }}>Generated Checklist & Audit Trail</p>
                             </div>
-                            <div className="text-right">
-                                <div className="text-xs font-semibold text-stone-900 bg-stone-100 px-2 py-1 rounded inline-block mb-1">
+                            <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#1c1917', backgroundColor: '#f5f5f4', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', display: 'inline-block', marginBottom: '0.25rem' }}>
                                     {new Date().toLocaleString('en-IN')}
                                 </div>
-                                <div className="text-xs text-stone-500">
-                                    Status: <span className="font-medium text-stone-900">{stats.checked}/{stats.total} Completed</span>
+                                <div style={{ fontSize: '0.75rem', color: '#78716c' }}>
+                                    Status: <span style={{ fontWeight: '500', color: '#1c1917' }}>{stats.checked}/{stats.total} Completed</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-0">
+                    <div>
                         {filteredFiles.length > 0 ? (
                             filteredFiles.map((file, index) => (
                                 <div
                                     key={file.id}
-                                    className={`flex items-start gap-3 py-3 ${index !== filteredFiles.length - 1 ? 'border-b border-stone-100' : ''
-                                        } break-inside-avoid`}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '0.75rem',
+                                        padding: '0.75rem 0',
+                                        borderBottom: index !== filteredFiles.length - 1 ? '1px solid #f5f5f4' : 'none',
+                                        pageBreakInside: 'avoid'
+                                    }}
                                 >
-                                    <div className={`mt-0.5 ${file.checked ? 'text-blue-600' : 'text-stone-300'}`}>
+                                    <div style={{ marginTop: '0.125rem', color: file.checked ? '#2563eb' : '#d6d3d1' }}>
                                         {file.checked ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="relative inline-block max-w-full">
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                                            <span style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
                                                 <span
-                                                    className={`font-medium text-sm transition-all relative z-10 break-all ${file.checked ? 'text-stone-400' : 'text-stone-900'
-                                                        }`}
+                                                    style={{
+                                                        fontWeight: '500',
+                                                        fontSize: '0.875rem',
+                                                        color: file.checked ? '#a8a29e' : '#1c1917',
+                                                        wordBreak: 'break-all'
+                                                    }}
                                                 >
                                                     {file.name.split('/').pop()}
                                                 </span>
                                                 {file.checked && (
-                                                    <span className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-4 pointer-events-none z-20 overflow-visible">
+                                                    <span style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: '1rem', pointerEvents: 'none', zIndex: 20, overflow: 'visible' }}>
                                                         <svg
                                                             viewBox="0 0 100 12"
                                                             preserveAspectRatio="none"
-                                                            className="w-full h-full"
-                                                            style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))' }}
+                                                            style={{ width: '100%', height: '100%' }}
                                                         >
                                                             <path
                                                                 d="M0,10 L100,2"
@@ -107,36 +151,53 @@ export function PrintPreview({
                                                                 fill="none"
                                                                 strokeLinecap="round"
                                                                 strokeLinejoin="round"
-                                                                className="opacity-90"
+                                                                style={{ opacity: 0.9 }}
                                                             />
                                                         </svg>
                                                     </span>
                                                 )}
                                             </span>
-                                            <div className="flex items-center gap-2 shrink-0 ml-2">
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, marginLeft: '0.5rem' }}>
                                                 <span
-                                                    className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${getPriorityColor(
-                                                        file.priority
-                                                    )}`}
+                                                    style={{
+                                                        fontSize: '9px',
+                                                        fontWeight: 'bold',
+                                                        textTransform: 'uppercase',
+                                                        letterSpacing: '0.05em',
+                                                        padding: '0.125rem 0.375rem',
+                                                        borderRadius: '0.25rem',
+                                                        border: '1px solid',
+                                                        backgroundColor: file.priority === 'high' ? '#fef2f2' : file.priority === 'low' ? '#f0fdf4' : '#fefce8',
+                                                        color: file.priority === 'high' ? '#dc2626' : file.priority === 'low' ? '#16a34a' : '#ca8a04',
+                                                        borderColor: file.priority === 'high' ? '#fecaca' : file.priority === 'low' ? '#bbf7d0' : '#fef08a'
+                                                    }}
                                                 >
                                                     {file.priority}
                                                 </span>
                                                 <span
-                                                    className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${file.checked ? 'bg-blue-50 text-blue-700' : 'bg-stone-100 text-stone-500'
-                                                        }`}
+                                                    style={{
+                                                        fontSize: '10px',
+                                                        fontWeight: 'bold',
+                                                        textTransform: 'uppercase',
+                                                        letterSpacing: '0.05em',
+                                                        padding: '0.125rem 0.375rem',
+                                                        borderRadius: '0.25rem',
+                                                        backgroundColor: file.checked ? '#eff6ff' : '#f5f5f4',
+                                                        color: file.checked ? '#1d4ed8' : '#78716c'
+                                                    }}
                                                 >
                                                     {file.checked ? 'Done' : 'Pending'}
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col gap-1">
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                                             {file.checkedAt && (
-                                                <div className="flex items-center gap-1 text-[10px] text-stone-400">
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '10px', color: '#a8a29e' }}>
                                                     <Clock size={10} /> Checked: {formatDate(file.checkedAt)}
                                                 </div>
                                             )}
                                             {file.notes && (
-                                                <div className="text-stone-600 text-xs bg-stone-50 px-2 py-0.5 rounded border border-stone-100 italic inline-block w-fit">
+                                                <div style={{ color: '#57534e', fontSize: '0.75rem', backgroundColor: '#fafaf9', padding: '0.125rem 0.5rem', borderRadius: '0.25rem', border: '1px solid #f5f5f4', fontStyle: 'italic', display: 'inline-block', width: 'fit-content' }}>
                                                     {file.notes}
                                                 </div>
                                             )}
@@ -145,13 +206,13 @@ export function PrintPreview({
                                 </div>
                             ))
                         ) : (
-                            <div className="text-center py-8 text-stone-400 italic text-sm">
+                            <div style={{ textAlign: 'center', padding: '2rem 0', color: '#a8a29e', fontStyle: 'italic', fontSize: '0.875rem' }}>
                                 No files included in this report.
                             </div>
                         )}
                     </div>
 
-                    <div className="mt-8 pt-4 border-t border-stone-100 text-center text-stone-400 text-xs">
+                    <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #f5f5f4', textAlign: 'center', color: '#a8a29e', fontSize: '0.75rem' }}>
                         Page 1 of 1
                     </div>
                 </div>

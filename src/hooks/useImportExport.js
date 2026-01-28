@@ -36,7 +36,14 @@ export function useImportExport({ files, importFiles }) {
 
     const handleDownloadPDF = () => {
         const element = document.getElementById('pdf-content');
+
+        if (!element) {
+            console.error('PDF content element not found');
+            return;
+        }
+
         if (window.html2pdf) {
+            document.body.style.cursor = 'wait';
             const opt = {
                 margin: [10, 10, 10, 10],
                 filename: `checklist-report-${new Date().toISOString().slice(0, 10)}.pdf`,
@@ -45,10 +52,18 @@ export function useImportExport({ files, importFiles }) {
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
-            document.body.style.cursor = 'wait';
-            window.html2pdf().set(opt).from(element).save().then(() => {
-                document.body.style.cursor = 'default';
-            });
+
+            window.html2pdf()
+                .set(opt)
+                .from(element)
+                .save()
+                .then(() => {
+                    document.body.style.cursor = 'default';
+                })
+                .catch((error) => {
+                    console.error('PDF generation failed:', error);
+                    document.body.style.cursor = 'default';
+                });
         } else {
             window.focus();
             window.print();
