@@ -61,6 +61,7 @@ export default function App() {
     handleSelectFolder,
     handleClearListClick,
     confirmClear,
+    handleUncheckAll,
     handleToolbarNewFile,
     handleToolbarNewFolder,
     handleAddFile,
@@ -132,8 +133,8 @@ export default function App() {
           <div
             onClick={() => handleSelectFolder(null)}
             className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm font-medium rounded-md mb-2 transition-colors border-l-2 ${!selectedFolder
-                ? 'bg-blue-50 text-blue-700 border-blue-500'
-                : 'text-stone-600 hover:bg-stone-200/50 border-transparent'
+              ? 'bg-blue-50 text-blue-700 border-blue-500'
+              : 'text-stone-600 hover:bg-stone-200/50 border-transparent'
               }`}
           >
             <Home size={16} />
@@ -182,6 +183,7 @@ export default function App() {
                 selectedFolder={selectedFolder}
                 onImport={handleImportClick}
                 onClear={handleClearListClick}
+                onUncheckAll={handleUncheckAll}
                 onExport={handleExportJSON}
                 onPreview={() => setShowPreview(true)}
                 fileInputRef={fileInputRef}

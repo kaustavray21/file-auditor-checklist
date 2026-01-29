@@ -1,10 +1,11 @@
-import { FileText, Upload, Trash2, Save, Printer } from 'lucide-react';
+import { FileText, Upload, Trash2, Save, Printer, SquareX } from 'lucide-react';
 
 export function Header({
     stats,
     selectedFolder,
     onImport,
     onClear,
+    onUncheckAll,
     onExport,
     onPreview,
     fileInputRef,
@@ -36,6 +37,12 @@ export function Header({
                         className="flex items-center gap-2 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition-colors font-medium text-xs md:text-sm"
                     >
                         <Upload size={14} /> Import
+                    </button>
+                    <button
+                        onClick={onUncheckAll}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 rounded-lg transition-colors font-medium text-xs md:text-sm"
+                    >
+                        <SquareX size={14} /> Uncheck All
                     </button>
                     <button
                         onClick={onClear}

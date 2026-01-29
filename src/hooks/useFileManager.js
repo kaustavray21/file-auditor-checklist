@@ -18,6 +18,7 @@ export function useFileManager() {
         handlePriorityChange,
         handleDelete,
         clearFiles,
+        uncheckAll,
         addFile,
         importFiles,
     } = useFiles();
@@ -127,6 +128,7 @@ export function useFileManager() {
         handleSelectFolder,
         handleClearListClick,
         confirmClear,
+        handleUncheckAll: uncheckAll,
         handleToolbarNewFile,
         handleToolbarNewFolder,
         handleAddFile,

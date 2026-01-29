@@ -76,6 +76,14 @@ export function useFiles() {
         setFiles([]);
     };
 
+    const uncheckAll = () => {
+        setFiles(files.map(file => ({
+            ...file,
+            checked: false,
+            checkedAt: null
+        })));
+    };
+
     const addFile = (file) => {
         setFiles([...files, file]);
     };
@@ -92,6 +100,7 @@ export function useFiles() {
         handlePriorityChange,
         handleDelete,
         clearFiles,
+        uncheckAll,
         addFile,
         importFiles,
     };
