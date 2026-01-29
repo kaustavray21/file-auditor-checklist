@@ -123,18 +123,19 @@ export function PrintPreview({
                                     <div style={{ marginTop: '0.125rem', color: file.checked ? '#2563eb' : '#d6d3d1' }}>
                                         {file.checked ? <CheckCircle2 size={16} /> : <Circle size={16} />}
                                     </div>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                                            <span style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                            <span style={{ position: 'relative', display: 'inline-block', overflow: 'visible' }}>
                                                 <span
                                                     style={{
                                                         fontWeight: '500',
                                                         fontSize: '0.875rem',
                                                         color: file.checked ? '#a8a29e' : '#1c1917',
-                                                        wordBreak: 'break-all'
+                                                        wordBreak: 'break-word',
+                                                        overflowWrap: 'break-word'
                                                     }}
                                                 >
-                                                    {file.name.split('/').pop()}
+                                                    {file.name}
                                                 </span>
                                                 {file.checked && (
                                                     <span style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: '1rem', pointerEvents: 'none', zIndex: 20, overflow: 'visible' }}>
@@ -157,7 +158,7 @@ export function PrintPreview({
                                                     </span>
                                                 )}
                                             </span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, marginLeft: '0.5rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
                                                 <span
                                                     style={{
                                                         fontSize: '9px',
@@ -210,10 +211,6 @@ export function PrintPreview({
                                 No files included in this report.
                             </div>
                         )}
-                    </div>
-
-                    <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #f5f5f4', textAlign: 'center', color: '#a8a29e', fontSize: '0.75rem' }}>
-                        Page 1 of 1
                     </div>
                 </div>
             </div>
