@@ -91,6 +91,37 @@ export function useFileTree(files) {
         return recursiveSort(root);
     }, [files]);
 
+    // Compute folder completion status - a folder is complete when all files in it and its subfolders are checked
+    const folderCompletionStatus = useMemo(() => {
+        const status = {};
+
+        // Get all unique folder paths
+        const folderPaths = new Set();
+        files.forEach(f => {
+            const parts = f.name.split('/');
+            let path = '';
+            for (let i = 0; i < parts.length - 1; i++) {
+                path = path ? `${path}/${parts[i]}` : parts[i];
+                folderPaths.add(path);
+            }
+        });
+
+        // For each folder, check if ALL files within it (including subfolders) are checked
+        folderPaths.forEach(folderPath => {
+            const filesInFolder = files.filter(f =>
+                f.name.startsWith(folderPath + '/')
+            );
+
+            if (filesInFolder.length === 0) {
+                status[folderPath] = false;
+            } else {
+                status[folderPath] = filesInFolder.every(f => f.checked);
+            }
+        });
+
+        return status;
+    }, [files]);
+
     const handleToggleFolderExpand = (folderId) => {
         setExpandedFolders(prev => {
             const next = new Set(prev);
@@ -156,6 +187,7 @@ export function useFileTree(files) {
         setIsSidebarOpen,
         uniqueFolders,
         fileTree,
+        folderCompletionStatus,
         handleToggleFolderExpand,
         handleCollapseAll,
         handleRefreshExplorer,

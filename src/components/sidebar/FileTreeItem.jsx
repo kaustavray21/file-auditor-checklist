@@ -15,6 +15,7 @@ export function FileTreeItem({
     activeFileId,
     expandedFolders,
     onToggleExpand,
+    folderCompletionStatus,
     // Drag and drop props
     draggedItem,
     dropTarget,
@@ -33,6 +34,9 @@ export function FileTreeItem({
     // Drag and drop state
     const isDragging = draggedItem && draggedItem.id === node.id;
     const isDropTarget = isFolder && dropTarget === node.id && !isDragging;
+
+    // Folder completion state - show green checkmark when all files in folder are checked
+    const isFolderComplete = isFolder && folderCompletionStatus && folderCompletionStatus[node.id];
 
     const handleClick = (e) => {
         e.stopPropagation();
@@ -122,7 +126,13 @@ export function FileTreeItem({
 
                 <span className="truncate">{node.name}</span>
 
+                {/* Show checkmark for completed files */}
                 {!isFolder && node.fileData && node.fileData.checked && (
+                    <CheckCircle2 size={14} className="ml-auto text-emerald-500 shrink-0" />
+                )}
+
+                {/* Show checkmark for completed folders (all files checked) */}
+                {isFolder && isFolderComplete && (
                     <CheckCircle2 size={14} className="ml-auto text-emerald-500 shrink-0" />
                 )}
             </div>
@@ -139,6 +149,7 @@ export function FileTreeItem({
                             activeFileId={activeFileId}
                             expandedFolders={expandedFolders}
                             onToggleExpand={onToggleExpand}
+                            folderCompletionStatus={folderCompletionStatus}
                             // Pass drag and drop props down
                             draggedItem={draggedItem}
                             dropTarget={dropTarget}

@@ -46,6 +46,7 @@ export default function App() {
     // Computed
     uniqueFolders,
     fileTree,
+    folderCompletionStatus,
     stats,
     filteredFiles,
 
@@ -161,6 +162,7 @@ export default function App() {
                 activeFileId={activeFileId}
                 expandedFolders={expandedFolders}
                 onToggleExpand={handleToggleFolderExpand}
+                folderCompletionStatus={folderCompletionStatus}
                 // Drag and drop props
                 draggedItem={draggedItem}
                 dropTarget={dropTarget}

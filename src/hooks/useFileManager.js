@@ -36,6 +36,7 @@ export function useFileManager() {
         setIsSidebarOpen,
         uniqueFolders,
         fileTree,
+        folderCompletionStatus,
         handleToggleFolderExpand,
         handleCollapseAll,
         handleRefreshExplorer,
@@ -127,6 +128,7 @@ export function useFileManager() {
         // Computed
         uniqueFolders,
         fileTree,
+        folderCompletionStatus,
         stats,
         filteredFiles,
 
