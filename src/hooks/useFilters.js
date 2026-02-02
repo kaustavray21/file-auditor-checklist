@@ -23,7 +23,7 @@ export function useFilters(files, selectedFolder) {
                 return !remainingPath.includes('/');
             }
             return true;
-        });
+        }).sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically (A-Z)
     }, [files, filter, priorityFilter, search, selectedFolder]);
 
     const stats = useMemo(() => ({
