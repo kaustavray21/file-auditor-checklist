@@ -3,6 +3,7 @@ import { useFileTree } from './useFileTree';
 import { useFilters } from './useFilters';
 import { useModals } from './useModals';
 import { useImportExport } from './useImportExport';
+import { useDragAndDrop } from './useDragAndDrop';
 
 /**
  * Main composition hook that combines all file management functionality.
@@ -21,6 +22,8 @@ export function useFileManager() {
         uncheckAll,
         addFile,
         importFiles,
+        moveFile,
+        moveFolder,
     } = useFiles();
 
     // File tree and folder navigation
@@ -85,6 +88,17 @@ export function useFileManager() {
         handleFileChange,
     } = useImportExport({ files, importFiles });
 
+    // Drag and drop functionality
+    const {
+        draggedItem,
+        dropTarget,
+        handleDragStart,
+        handleDragOver,
+        handleDragLeave,
+        handleDrop,
+        handleDragEnd,
+    } = useDragAndDrop({ moveFile, moveFolder });
+
     return {
         // State
         files,
@@ -137,5 +151,14 @@ export function useFileManager() {
         handleDownloadPDF,
         handleImportClick,
         handleFileChange,
+
+        // Drag and drop
+        draggedItem,
+        dropTarget,
+        handleDragStart,
+        handleDragOver,
+        handleDragLeave,
+        handleDrop,
+        handleDragEnd,
     };
 }

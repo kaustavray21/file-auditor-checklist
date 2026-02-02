@@ -92,6 +92,42 @@ export function useFiles() {
         setFiles(newFiles);
     };
 
+    /**
+     * Move a single file to a new folder.
+     * @param {number} fileId - The ID of the file to move
+     * @param {string} newFolderPath - The path of the destination folder
+     */
+    const moveFile = (fileId, newFolderPath) => {
+        setFiles(files.map(file => {
+            if (file.id === fileId) {
+                // Extract just the filename from the current path
+                const parts = file.name.split('/');
+                const fileName = parts[parts.length - 1];
+                // Create new path
+                const newPath = newFolderPath ? `${newFolderPath}/${fileName}` : fileName;
+                return { ...file, name: newPath };
+            }
+            return file;
+        }));
+    };
+
+    /**
+     * Move an entire folder (and all its contents) to a new location.
+     * @param {string} oldPath - The current path of the folder
+     * @param {string} newPath - The new path for the folder
+     */
+    const moveFolder = (oldPath, newPath) => {
+        setFiles(files.map(file => {
+            // Check if this file is inside the folder being moved
+            if (file.name === oldPath || file.name.startsWith(oldPath + '/')) {
+                // Replace the old path prefix with the new path
+                const updatedName = file.name.replace(oldPath, newPath);
+                return { ...file, name: updatedName };
+            }
+            return file;
+        }));
+    };
+
     return {
         files,
         setFiles,
@@ -103,5 +139,7 @@ export function useFiles() {
         uncheckAll,
         addFile,
         importFiles,
+        moveFile,
+        moveFolder,
     };
 }

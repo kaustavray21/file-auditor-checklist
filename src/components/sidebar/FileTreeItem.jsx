@@ -15,12 +15,24 @@ export function FileTreeItem({
     activeFileId,
     expandedFolders,
     onToggleExpand,
+    // Drag and drop props
+    draggedItem,
+    dropTarget,
+    onDragStart,
+    onDragOver,
+    onDragLeave,
+    onDrop,
+    onDragEnd,
 }) {
     const isFolder = node.type === 'folder';
     const paddingLeft = `${level * 12 + 12}px`;
     const isOpen = expandedFolders.has(node.id);
     const isSelectedFolder = isFolder && selectedFolder === node.id;
     const isActiveFile = !isFolder && node.fileData && node.fileData.id === activeFileId;
+
+    // Drag and drop state
+    const isDragging = draggedItem && draggedItem.id === node.id;
+    const isDropTarget = isFolder && dropTarget === node.id && !isDragging;
 
     const handleClick = (e) => {
         e.stopPropagation();
@@ -30,14 +42,55 @@ export function FileTreeItem({
         }
     };
 
+    // Drag handlers
+    const handleDragStart = (e) => {
+        if (onDragStart) onDragStart(e, node);
+    };
+
+    const handleDragOver = (e) => {
+        if (onDragOver) onDragOver(e, node);
+    };
+
+    const handleDragLeave = (e) => {
+        if (onDragLeave) onDragLeave(e);
+    };
+
+    const handleDrop = (e) => {
+        if (onDrop) onDrop(e, node);
+    };
+
+    const handleDragEnd = (e) => {
+        if (onDragEnd) onDragEnd(e);
+    };
+
+    // Build dynamic class names
+    let itemClasses = `flex items-center gap-1.5 py-1 pr-2 cursor-pointer text-sm select-none transition-all border-l-2 `;
+
+    if (isSelectedFolder || isActiveFile) {
+        itemClasses += 'bg-blue-50 text-blue-700 border-blue-500 font-medium ';
+    } else {
+        itemClasses += 'border-transparent hover:bg-stone-200/50 text-stone-700 ';
+    }
+
+    // Drag state classes
+    if (isDragging) {
+        itemClasses += 'opacity-50 ';
+    }
+    if (isDropTarget) {
+        itemClasses += 'bg-blue-100 border-blue-400 ring-2 ring-blue-300 ring-inset ';
+    }
+
     return (
         <div>
             <div
                 onClick={handleClick}
-                className={`flex items-center gap-1.5 py-1 pr-2 cursor-pointer text-sm select-none transition-colors border-l-2 ${isSelectedFolder || isActiveFile
-                        ? 'bg-blue-50 text-blue-700 border-blue-500 font-medium'
-                        : 'border-transparent hover:bg-stone-200/50 text-stone-700'
-                    }`}
+                draggable={true}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onDragEnd={handleDragEnd}
+                className={itemClasses}
                 style={{ paddingLeft }}
             >
                 <span className={`shrink-0 ${isSelectedFolder || isActiveFile ? 'text-blue-500' : 'text-stone-400'}`}>
@@ -50,12 +103,14 @@ export function FileTreeItem({
 
                 <span
                     className={`shrink-0 ${isFolder
-                            ? isSelectedFolder
-                                ? 'text-blue-600'
+                        ? isSelectedFolder
+                            ? 'text-blue-600'
+                            : isDropTarget
+                                ? 'text-blue-500'
                                 : 'text-blue-500'
-                            : isActiveFile
-                                ? 'text-blue-600'
-                                : 'text-stone-400'
+                        : isActiveFile
+                            ? 'text-blue-600'
+                            : 'text-stone-400'
                         }`}
                 >
                     {isFolder ? (
@@ -84,6 +139,14 @@ export function FileTreeItem({
                             activeFileId={activeFileId}
                             expandedFolders={expandedFolders}
                             onToggleExpand={onToggleExpand}
+                            // Pass drag and drop props down
+                            draggedItem={draggedItem}
+                            dropTarget={dropTarget}
+                            onDragStart={onDragStart}
+                            onDragOver={onDragOver}
+                            onDragLeave={onDragLeave}
+                            onDrop={onDrop}
+                            onDragEnd={onDragEnd}
                         />
                     ))}
                 </div>

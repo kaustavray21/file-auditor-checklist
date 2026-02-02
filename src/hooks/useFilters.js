@@ -15,7 +15,12 @@ export function useFilters(files, selectedFolder) {
             if (priorityFilter !== 'all' && file.priority !== priorityFilter) return false;
             if (search && !file.name.toLowerCase().includes(search.toLowerCase())) return false;
             if (selectedFolder) {
-                return file.name.startsWith(selectedFolder + '/');
+                // Only show files directly in the selected folder, not in subfolders
+                const prefix = selectedFolder + '/';
+                if (!file.name.startsWith(prefix)) return false;
+                // Check if the remaining path (after the folder prefix) contains no additional '/'
+                const remainingPath = file.name.slice(prefix.length);
+                return !remainingPath.includes('/');
             }
             return true;
         });

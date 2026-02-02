@@ -70,6 +70,15 @@ export default function App() {
     handleDownloadPDF,
     handleImportClick,
     handleFileChange,
+
+    // Drag and drop
+    draggedItem,
+    dropTarget,
+    handleDragStart,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleDragEnd,
   } = useFileManager();
 
   // Render Print Preview
@@ -152,6 +161,14 @@ export default function App() {
                 activeFileId={activeFileId}
                 expandedFolders={expandedFolders}
                 onToggleExpand={handleToggleFolderExpand}
+                // Drag and drop props
+                draggedItem={draggedItem}
+                dropTarget={dropTarget}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onDragEnd={handleDragEnd}
               />
             ))
           ) : (
