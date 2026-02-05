@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine } from 'lucide-react';
 import { getPriorityColor, formatDate } from '../../utils/helpers';
 
-export function FileListItem({
+export const FileListItem = memo(function FileListItem({
     file,
     onToggle,
     onToggleHasChanges,
@@ -149,4 +150,4 @@ export function FileListItem({
             </div>
         </div>
     );
-}
+});

@@ -6,14 +6,26 @@ A modern, feature-rich file auditing application built with React + Vite. Track,
 
 ## ✨ Features
 
+### Core Features
 - **File Explorer Sidebar** - Navigate your files with a VS Code-style tree view
+- **Resizable Sidebar** - Drag the sidebar edge to adjust width (200px - 600px)
 - **Check/Uncheck Files** - Track which files have been reviewed
 - **Priority Levels** - Mark files as High, Medium, or Low priority
 - **Notes** - Add notes to any file for context
-- **Filtering & Search** - Filter by status (All/Pending/Completed), priority, and filename
-- **Import/Export JSON** - Save and load your audit progress
-- **PDF Report Generation** - Generate printable audit reports
-- **Local Storage Persistence** - Your data is saved automatically
+- **Mark as Changed** - Flag files that have been edited or modified
+
+### Filtering & Search
+- **Smart Filtering** - Filter by status (All/Pending/Completed/Changed)
+- **Filter Badges** - See file counts for each filter category
+- **Priority Filter** - Filter by High, Medium, or Low priority
+- **Filename Search** - Quick search through all filenames
+- **Folder-Scoped Counts** - Badge counts reflect selected folder
+
+### Import/Export
+- **Import JSON** - Load your file list from a JSON file
+- **Export JSON** - Save your audit progress as JSON
+- **PDF Report** - Generate printable audit reports with changed files section
+- **Auto-Save** - Your data persists automatically in localStorage
 
 ---
 
@@ -56,12 +68,21 @@ npm run preview
 - **Toggle Status**: Click on a file to mark it as reviewed/pending
 - **Change Priority**: Use the dropdown on each file card (High/Med/Low)
 - **Add Notes**: Type in the notes field on each file card
+- **Mark as Changed**: Click the pen icon to flag a file as edited/modified
 - **Delete**: Hover over a file and click the trash icon
 - **Reveal in Explorer**: Hover and click the folder icon to navigate to that file's folder
 
+### Using the Sidebar
+
+- **Resize**: Drag the right edge of the sidebar to adjust width
+- **Collapse/Expand Folders**: Click on folders to toggle
+- **Collapse All**: Click the collapse button in the toolbar
+- **Select Folder**: Click a folder to filter the main view to its contents
+
 ### Filtering
 
-- **Status Filter**: Switch between All, Pending, and Completed tabs
+- **Status Filter**: Switch between All, Pending, Completed, and Changed tabs
+- **Filter Badges**: Each filter shows the count of files in that category
 - **Priority Filter**: Use the dropdown to filter by priority level
 - **Search**: Type in the search box to filter by filename
 - **Folder Filter**: Click on a folder in the sidebar to view only its contents
@@ -70,6 +91,7 @@ npm run preview
 
 - **JSON Export**: Click **JSON** to download your data
 - **PDF Report**: Click **PDF** to generate a printable report
+  - Includes a separate "Changed Files" section for edited files
 
 ---
 
@@ -91,6 +113,7 @@ Import your file list as a JSON array. Each file object supports the following f
 | `checked` | `boolean` | `false` | Whether the file has been reviewed |
 | `notes` | `string` | `""` | Notes about the file |
 | `priority` | `string` | `"medium"` | Priority level: `"high"`, `"medium"`, or `"low"` |
+| `hasChanges` | `boolean` | `false` | Whether the file has been edited/modified |
 | `checkedAt` | `string` | `null` | ISO timestamp when the file was checked |
 
 ### Example JSON
@@ -211,11 +234,13 @@ src/
 │   ├── modals/         # AddFileModal, ClearConfirmModal
 │   └── sidebar/        # FileTreeItem, ExplorerToolbar, SidebarFooter
 ├── hooks/
-│   ├── useFiles.js     # Core CRUD operations
-│   ├── useFileTree.js  # Tree navigation
-│   ├── useFilters.js   # Filter/search state
-│   ├── useModals.js    # Modal state
+│   ├── useFiles.js        # Core CRUD operations
+│   ├── useFileTree.js     # Tree navigation
+│   ├── useFilters.js      # Filter/search state
+│   ├── useModals.js       # Modal state
 │   ├── useImportExport.js # Import/Export/PDF
+│   ├── useSidebarResize.js # Resizable sidebar
+│   ├── useDragAndDrop.js  # Drag and drop
 │   └── useFileManager.js  # Composition hook
 ├── utils/
 │   ├── fileIcons.jsx   # File type icons

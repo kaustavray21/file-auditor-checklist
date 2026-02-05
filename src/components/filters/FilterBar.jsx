@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Search, Plus, Filter } from 'lucide-react';
 
-export function FilterBar({
+export const FilterBar = memo(function FilterBar({
     filter,
     setFilter,
     priorityFilter,
@@ -8,6 +9,7 @@ export function FilterBar({
     search,
     setSearch,
     onAddFile,
+    filterCounts = { all: 0, pending: 0, completed: 0, changed: 0 },
 }) {
     return (
         <div className="flex flex-col md:flex-row gap-4 mb-6 justify-between items-center">
@@ -17,12 +19,18 @@ export function FilterBar({
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${filter === f
+                            className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition-all flex items-center gap-2 ${filter === f
                                 ? 'bg-white text-stone-900 shadow-sm'
                                 : 'text-stone-600 hover:text-stone-900'
                                 }`}
                         >
                             {f}
+                            <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${filter === f
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-stone-200 text-stone-600'
+                                }`}>
+                                {filterCounts[f]}
+                            </span>
                         </button>
                     ))}
                 </div>
@@ -65,4 +73,4 @@ export function FilterBar({
             </div>
         </div>
     );
-}
+});

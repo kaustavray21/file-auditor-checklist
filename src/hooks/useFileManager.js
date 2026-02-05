@@ -4,6 +4,7 @@ import { useFilters } from './useFilters';
 import { useModals } from './useModals';
 import { useImportExport } from './useImportExport';
 import { useDragAndDrop } from './useDragAndDrop';
+import { useSidebarResize } from './useSidebarResize';
 
 /**
  * Main composition hook that combines all file management functionality.
@@ -55,6 +56,7 @@ export function useFileManager() {
         setSearch,
         filteredFiles,
         stats,
+        filterCounts,
     } = useFilters(files, selectedFolder);
 
     // Modal state management
@@ -101,6 +103,13 @@ export function useFileManager() {
         handleDragEnd,
     } = useDragAndDrop({ moveFile, moveFolder });
 
+    // Sidebar resize functionality
+    const {
+        sidebarWidth,
+        isResizing,
+        handleMouseDown,
+    } = useSidebarResize();
+
     return {
         // State
         files,
@@ -132,6 +141,7 @@ export function useFileManager() {
         folderCompletionStatus,
         stats,
         filteredFiles,
+        filterCounts,
 
         // Handlers
         handleToggle,
@@ -164,5 +174,10 @@ export function useFileManager() {
         handleDragLeave,
         handleDrop,
         handleDragEnd,
+
+        // Sidebar resize
+        sidebarWidth,
+        isResizing,
+        handleSidebarMouseDown: handleMouseDown,
     };
 }

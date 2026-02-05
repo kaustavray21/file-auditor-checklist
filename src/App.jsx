@@ -49,6 +49,7 @@ export default function App() {
     folderCompletionStatus,
     stats,
     filteredFiles,
+    filterCounts,
 
     // Handlers
     handleToggle,
@@ -81,6 +82,11 @@ export default function App() {
     handleDragLeave,
     handleDrop,
     handleDragEnd,
+
+    // Sidebar resize
+    sidebarWidth,
+    isResizing,
+    handleSidebarMouseDown,
   } = useFileManager();
 
   // Render Print Preview
@@ -116,8 +122,8 @@ export default function App() {
 
       {/* Sidebar */}
       <aside
-        className={`${isSidebarOpen ? 'w-96' : 'w-0'
-          } flex-none bg-[#f5f2eb] border-r border-stone-200 flex flex-col transition-all duration-300 overflow-hidden relative`}
+        style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0' }}
+        className="flex-none bg-[#f5f2eb] border-r border-stone-200 flex flex-col transition-all duration-300 overflow-hidden relative"
       >
         <div className="px-4 pt-4 pb-2 border-b border-stone-200 bg-[#fdfbf7]/50 backdrop-blur-sm sticky top-0 z-10">
           <div className="flex items-center justify-between mb-3">
@@ -182,6 +188,18 @@ export default function App() {
         </div>
 
         <SidebarFooter itemCount={files.length} />
+
+        {/* Resize Handle */}
+        {isSidebarOpen && (
+          <div
+            onMouseDown={handleSidebarMouseDown}
+            className={`absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-blue-500 transition-colors ${isResizing ? 'bg-blue-500' : 'bg-transparent'
+              }`}
+            style={{ zIndex: 50 }}
+          >
+            <div className="absolute top-0 right-0 w-1 h-full" />
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}
@@ -218,6 +236,7 @@ export default function App() {
                 search={search}
                 setSearch={setSearch}
                 onAddFile={handleAddFile}
+                filterCounts={filterCounts}
               />
 
               <div className="space-y-3 pb-8">

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
     CheckCircle2,
     ChevronRight,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import { getFileIcon } from '../../utils/fileIcons';
 
-export function FileTreeItem({
+export const FileTreeItem = memo(function FileTreeItem({
     node,
     level,
     onSelectFolder,
@@ -164,4 +165,4 @@ export function FileTreeItem({
             )}
         </div>
     );
-}
+});

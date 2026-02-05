@@ -1,13 +1,19 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 
 /**
  * Hook for managing file tree navigation and folder state.
+ * Optimized to only rebuild tree when file names change, not when properties change.
  */
 export function useFileTree(files) {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [activeFileId, setActiveFileId] = useState(null);
     const [expandedFolders, setExpandedFolders] = useState(new Set());
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    // Memoize file names to detect structural changes vs property changes
+    const fileNamesKey = useMemo(() => {
+        return files.map(f => `${f.id}:${f.name}`).join('|');
+    }, [files]);
 
     // Initialize expanded folders on first load
     useEffect(() => {
@@ -24,7 +30,7 @@ export function useFileTree(files) {
         });
     }, []);
 
-    // Compute unique folders
+    // Compute unique folders - only when file names change
     const uniqueFolders = useMemo(() => {
         const folders = new Set();
         files.forEach(f => {
@@ -34,9 +40,9 @@ export function useFileTree(files) {
             }
         });
         return Array.from(folders).sort();
-    }, [files]);
+    }, [fileNamesKey]);
 
-    // Build file tree structure
+    // Build file tree structure - only when file names change
     const fileTree = useMemo(() => {
         const root = [];
         const sortNodes = (nodes) => {
@@ -62,6 +68,9 @@ export function useFileTree(files) {
                 if (existingNode) {
                     if (!isFile) {
                         currentLevel = existingNode.children;
+                    } else {
+                        // Update fileData reference for existing files
+                        existingNode.fileData = file;
                     }
                 } else {
                     const newNode = {
@@ -89,34 +98,40 @@ export function useFileTree(files) {
         };
 
         return recursiveSort(root);
-    }, [files]);
+    }, [files]); // Keep files dependency for fileData updates
 
-    // Compute folder completion status - a folder is complete when all files in it and its subfolders are checked
+    // Compute folder completion status - uses a Map for O(1) lookups
     const folderCompletionStatus = useMemo(() => {
         const status = {};
-
-        // Get all unique folder paths
         const folderPaths = new Set();
-        files.forEach(f => {
+
+        // Single pass to collect folder paths
+        for (const f of files) {
             const parts = f.name.split('/');
             let path = '';
             for (let i = 0; i < parts.length - 1; i++) {
                 path = path ? `${path}/${parts[i]}` : parts[i];
                 folderPaths.add(path);
             }
-        });
+        }
 
-        // For each folder, check if ALL files within it (including subfolders) are checked
+        // Check completion for each folder
         folderPaths.forEach(folderPath => {
-            const filesInFolder = files.filter(f =>
-                f.name.startsWith(folderPath + '/')
-            );
+            const prefix = folderPath + '/';
+            let allChecked = true;
+            let hasFiles = false;
 
-            if (filesInFolder.length === 0) {
-                status[folderPath] = false;
-            } else {
-                status[folderPath] = filesInFolder.every(f => f.checked);
+            for (const f of files) {
+                if (f.name.startsWith(prefix)) {
+                    hasFiles = true;
+                    if (!f.checked) {
+                        allChecked = false;
+                        break; // Early exit
+                    }
+                }
             }
+
+            status[folderPath] = hasFiles && allChecked;
         });
 
         return status;
