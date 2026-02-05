@@ -2,10 +2,11 @@
 
 ## Features Added
 
-### 1. PDF Report - Changed Files Section
-- Added dedicated section in PDF reports showing files marked as "changed"
-- Displays file metadata: name, priority, status, notes, timestamps
-- Yellow background (`#fefce8`) for visual distinction
+### 1. PDF Report - Inline Change Markings
+- Replaced the separate "Changed Files" section with inline **orange** "Changed" badges
+- Badges appear directly next to the file priority for easier scanning
+- Uses unique orange color (`#fff7ed` bg, `#ea580c` text) distinct from other badges
+- Report structure is now more concise and professional
 - File: `src/views/PrintPreview.jsx`
 
 ### 2. Resizable Sidebar

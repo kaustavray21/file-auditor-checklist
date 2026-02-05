@@ -8,9 +8,6 @@ export function PrintPreview({
     onDownloadPDF,
     isPdfLibLoaded,
 }) {
-    // Separate changed files for dedicated section
-    const changedFiles = filteredFiles.filter(file => file.hasChanges);
-
     return (
         <div className="min-h-screen bg-[#fdfbf7] font-sans">
             <style>{`
@@ -162,6 +159,7 @@ export function PrintPreview({
                                                 )}
                                             </span>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+
                                                 <span
                                                     style={{
                                                         fontSize: '9px',
@@ -178,6 +176,23 @@ export function PrintPreview({
                                                 >
                                                     {file.priority}
                                                 </span>
+                                                {file.hasChanges && (
+                                                    <span
+                                                        style={{
+                                                            fontSize: '9px',
+                                                            fontWeight: 'bold',
+                                                            textTransform: 'uppercase',
+                                                            letterSpacing: '0.05em',
+                                                            padding: '0.125rem 0.375rem',
+                                                            borderRadius: '0.25rem',
+                                                            backgroundColor: '#fff7ed',
+                                                            color: '#ea580c',
+                                                            border: '1px solid #fed7aa'
+                                                        }}
+                                                    >
+                                                        Changed
+                                                    </span>
+                                                )}
                                                 <span
                                                     style={{
                                                         fontSize: '10px',
@@ -215,128 +230,6 @@ export function PrintPreview({
                             </div>
                         )}
                     </div>
-
-                    {/* Changed Files Section */}
-                    {changedFiles.length > 0 && (
-                        <>
-                            <div style={{ borderTop: '2px solid #e7e5e4', marginTop: '2rem', paddingTop: '1.5rem', pageBreakBefore: 'auto' }}>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1c1917', marginBottom: '0.25rem' }}>
-                                        Changed Files
-                                    </h2>
-                                    <p style={{ color: '#78716c', fontSize: '0.875rem' }}>
-                                        Files marked as edited or modified ({changedFiles.length} total)
-                                    </p>
-                                </div>
-
-                                <div>
-                                    {changedFiles.map((file, index) => (
-                                        <div
-                                            key={file.id}
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'flex-start',
-                                                gap: '0.75rem',
-                                                padding: '0.75rem 0',
-                                                borderBottom: index !== changedFiles.length - 1 ? '1px solid #f5f5f4' : 'none',
-                                                pageBreakInside: 'avoid',
-                                                backgroundColor: '#fefce8',
-                                                paddingLeft: '0.5rem',
-                                                paddingRight: '0.5rem',
-                                                borderRadius: '0.375rem',
-                                                marginBottom: '0.5rem'
-                                            }}
-                                        >
-                                            <div style={{ marginTop: '0.125rem', color: file.checked ? '#2563eb' : '#d6d3d1' }}>
-                                                {file.checked ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-                                            </div>
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                                    <span style={{ position: 'relative', display: 'inline-block', overflow: 'visible' }}>
-                                                        <span
-                                                            style={{
-                                                                fontWeight: '500',
-                                                                fontSize: '0.875rem',
-                                                                color: file.checked ? '#a8a29e' : '#1c1917',
-                                                                wordBreak: 'break-word',
-                                                                overflowWrap: 'break-word'
-                                                            }}
-                                                        >
-                                                            {file.name}
-                                                        </span>
-                                                        {file.checked && (
-                                                            <span style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: '1rem', pointerEvents: 'none', zIndex: 20, overflow: 'visible' }}>
-                                                                <svg
-                                                                    viewBox="0 0 100 12"
-                                                                    preserveAspectRatio="none"
-                                                                    style={{ width: '100%', height: '100%' }}
-                                                                >
-                                                                    <path
-                                                                        d="M0,10 L100,2"
-                                                                        vectorEffect="non-scaling-stroke"
-                                                                        stroke="#ef4444"
-                                                                        strokeWidth="2"
-                                                                        fill="none"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        style={{ opacity: 0.9 }}
-                                                                    />
-                                                                </svg>
-                                                            </span>
-                                                        )}
-                                                    </span>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-                                                        <span
-                                                            style={{
-                                                                fontSize: '9px',
-                                                                fontWeight: 'bold',
-                                                                textTransform: 'uppercase',
-                                                                letterSpacing: '0.05em',
-                                                                padding: '0.125rem 0.375rem',
-                                                                borderRadius: '0.25rem',
-                                                                border: '1px solid',
-                                                                backgroundColor: file.priority === 'high' ? '#fef2f2' : file.priority === 'low' ? '#f0fdf4' : '#fefce8',
-                                                                color: file.priority === 'high' ? '#dc2626' : file.priority === 'low' ? '#16a34a' : '#ca8a04',
-                                                                borderColor: file.priority === 'high' ? '#fecaca' : file.priority === 'low' ? '#bbf7d0' : '#fef08a'
-                                                            }}
-                                                        >
-                                                            {file.priority}
-                                                        </span>
-                                                        <span
-                                                            style={{
-                                                                fontSize: '10px',
-                                                                fontWeight: 'bold',
-                                                                textTransform: 'uppercase',
-                                                                letterSpacing: '0.05em',
-                                                                padding: '0.125rem 0.375rem',
-                                                                borderRadius: '0.25rem',
-                                                                backgroundColor: file.checked ? '#eff6ff' : '#f5f5f4',
-                                                                color: file.checked ? '#1d4ed8' : '#78716c'
-                                                            }}
-                                                        >
-                                                            {file.checked ? 'Done' : 'Pending'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                                                    {file.checkedAt && (
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '10px', color: '#a8a29e' }}>
-                                                            <Clock size={10} /> Checked: {formatDate(file.checkedAt)}
-                                                        </div>
-                                                    )}
-                                                    {file.notes && (
-                                                        <div style={{ color: '#57534e', fontSize: '0.75rem', backgroundColor: '#fafaf9', padding: '0.125rem 0.5rem', borderRadius: '0.25rem', border: '1px solid #f5f5f4', fontStyle: 'italic', display: 'inline-block', width: 'fit-content' }}>
-                                                            {file.notes}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
                 </div>
             </div>
         </div>
