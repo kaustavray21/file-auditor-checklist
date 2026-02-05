@@ -12,6 +12,7 @@ export function useFilters(files, selectedFolder) {
         return files.filter(file => {
             if (filter === 'completed' && !file.checked) return false;
             if (filter === 'pending' && file.checked) return false;
+            if (filter === 'changed' && !file.hasChanges) return false;
             if (priorityFilter !== 'all' && file.priority !== priorityFilter) return false;
             if (search && !file.name.toLowerCase().includes(search.toLowerCase())) return false;
             if (selectedFolder) {

@@ -15,6 +15,7 @@ export function useFileManager() {
     const {
         files,
         handleToggle,
+        handleToggleHasChanges,
         handleNoteChange,
         handlePriorityChange,
         handleDelete,
@@ -134,6 +135,7 @@ export function useFileManager() {
 
         // Handlers
         handleToggle,
+        handleToggleHasChanges,
         handleNoteChange,
         handlePriorityChange,
         handleDelete,

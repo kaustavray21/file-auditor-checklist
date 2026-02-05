@@ -1,9 +1,10 @@
-import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink } from 'lucide-react';
+import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine } from 'lucide-react';
 import { getPriorityColor, formatDate } from '../../utils/helpers';
 
 export function FileListItem({
     file,
     onToggle,
+    onToggleHasChanges,
     onNoteChange,
     onPriorityChange,
     onDelete,
@@ -114,7 +115,19 @@ export function FileListItem({
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                <div className={`flex gap-1 items-start flex-shrink-0 transition-opacity ${file.hasChanges ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleHasChanges(file.id);
+                        }}
+                        className={`p-1.5 rounded-lg transition-colors ${file.hasChanges
+                            ? 'text-amber-600 bg-amber-50 hover:bg-amber-100'
+                            : 'text-stone-300 hover:text-amber-600 hover:bg-amber-50'}`}
+                        title={file.hasChanges ? "Marked as changed" : "Mark as changed"}
+                    >
+                        <FilePenLine size={16} />
+                    </button>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();

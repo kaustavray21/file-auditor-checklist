@@ -13,13 +13,13 @@ export function FilterBar({
         <div className="flex flex-col md:flex-row gap-4 mb-6 justify-between items-center">
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex bg-[#f5f2eb] p-1 rounded-lg">
-                    {['all', 'pending', 'completed'].map((f) => (
+                    {['all', 'pending', 'completed', 'changed'].map((f) => (
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${filter === f
-                                    ? 'bg-white text-stone-900 shadow-sm'
-                                    : 'text-stone-600 hover:text-stone-900'
+                                ? 'bg-white text-stone-900 shadow-sm'
+                                : 'text-stone-600 hover:text-stone-900'
                                 }`}
                         >
                             {f}

@@ -56,6 +56,15 @@ export function useFiles() {
         }));
     };
 
+    const handleToggleHasChanges = (id) => {
+        setFiles(files.map(file => {
+            if (file.id === id) {
+                return { ...file, hasChanges: !file.hasChanges };
+            }
+            return file;
+        }));
+    };
+
     const handleNoteChange = (id, newNote) => {
         setFiles(files.map(file =>
             file.id === id ? { ...file, notes: newNote } : file
@@ -132,6 +141,7 @@ export function useFiles() {
         files,
         setFiles,
         handleToggle,
+        handleToggleHasChanges,
         handleNoteChange,
         handlePriorityChange,
         handleDelete,

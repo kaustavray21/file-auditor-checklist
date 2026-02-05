@@ -52,6 +52,7 @@ export default function App() {
 
     // Handlers
     handleToggle,
+    handleToggleHasChanges,
     handleNoteChange,
     handlePriorityChange,
     handleDelete,
@@ -226,6 +227,7 @@ export default function App() {
                       key={file.id}
                       file={file}
                       onToggle={handleToggle}
+                      onToggleHasChanges={handleToggleHasChanges}
                       onNoteChange={handleNoteChange}
                       onPriorityChange={handlePriorityChange}
                       onDelete={handleDelete}
