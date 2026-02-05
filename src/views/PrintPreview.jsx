@@ -1,5 +1,5 @@
 import { ArrowLeft, Printer, Download, CheckCircle2, Circle, Clock } from 'lucide-react';
-import { getPriorityColor, formatDate } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 
 export function PrintPreview({
     filteredFiles,
@@ -9,47 +9,16 @@ export function PrintPreview({
     isPdfLibLoaded,
 }) {
     return (
-        <div className="min-h-screen bg-[#fdfbf7] font-sans">
+        <div className="min-h-screen bg-white font-sans">
             <style>{`
-        /* PDF Generation Fix: Override oklch colors with RGB equivalents for html2canvas compatibility */
         #pdf-content, #pdf-content * {
-          --color-white: #ffffff;
-          --color-stone-50: #fafaf9;
-          --color-stone-100: #f5f5f4;
-          --color-stone-200: #e7e5e4;
-          --color-stone-300: #d6d3d1;
-          --color-stone-400: #a8a29e;
-          --color-stone-500: #78716c;
-          --color-stone-600: #57534e;
-          --color-stone-700: #44403c;
-          --color-stone-800: #292524;
-          --color-stone-900: #1c1917;
-          --color-blue-50: #eff6ff;
-          --color-blue-600: #2563eb;
-          --color-blue-700: #1d4ed8;
-          --color-red-500: #ef4444;
-        }
-        #pdf-content {
+          color: #000000 !important;
           background-color: #ffffff !important;
-          color: #1c1917 !important;
         }
-        #pdf-content .bg-white { background-color: #ffffff !important; }
-        #pdf-content .bg-stone-50 { background-color: #fafaf9 !important; }
-        #pdf-content .bg-stone-100 { background-color: #f5f5f4 !important; }
-        #pdf-content .bg-blue-50 { background-color: #eff6ff !important; }
-        #pdf-content .text-stone-400 { color: #a8a29e !important; }
-        #pdf-content .text-stone-500 { color: #78716c !important; }
-        #pdf-content .text-stone-600 { color: #57534e !important; }
-        #pdf-content .text-stone-900 { color: #1c1917 !important; }
-        #pdf-content .text-blue-600 { color: #2563eb !important; }
-        #pdf-content .text-blue-700 { color: #1d4ed8 !important; }
-        #pdf-content .border-stone-100 { border-color: #f5f5f4 !important; }
-        #pdf-content .border-stone-200 { border-color: #e7e5e4 !important; }
-        
         @media print {
           .no-print { display: none !important; }
-          body { background-color: white !important; -webkit-print-color-adjust: exact; }
-          .print-container { margin: 0; padding: 0; box-shadow: none; border: none; }
+          body { background-color: white !important; }
+          .print-container { margin: 0; padding: 0; }
         }
       `}</style>
 
@@ -62,7 +31,7 @@ export function PrintPreview({
                         <ArrowLeft size={20} /> Back
                     </button>
                     <div className="h-6 w-px bg-stone-700"></div>
-                    <span className="font-semibold text-white">Print Preview (Audit Mode)</span>
+                    <span className="font-semibold text-white">Print Preview (B&W Mode)</span>
                 </div>
                 <div className="flex gap-3">
                     <button
@@ -73,39 +42,41 @@ export function PrintPreview({
                     </button>
                     <button
                         onClick={() => window.print()}
-                        title="Use System Print Dialog"
-                        className="flex items-center gap-2 px-3 py-2 bg-stone-700 hover:bg-stone-600 text-white rounded-lg font-medium shadow-sm transition-transform active:scale-95"
-                    >
-                        <Printer size={18} />
-                    </button>
-                    <button
-                        onClick={onDownloadPDF}
                         className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm transition-transform active:scale-95"
                     >
-                        <Download size={18} /> {isPdfLibLoaded ? 'Download PDF' : 'Print PDF'}
+                        <Printer size={18} /> Print PDF
                     </button>
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto my-8 print:my-0">
-                <div id="pdf-content" style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '0.75rem', border: '1px solid #e7e5e4' }}>
-                    <div style={{ borderBottom: '1px solid #e7e5e4', paddingBottom: '1rem', marginBottom: '1rem' }}>
+            <div className="max-w-4xl mx-auto py-8 px-4 print:p-0 print:max-w-none">
+                <div id="pdf-content" style={{
+                    backgroundColor: '#ffffff',
+                    padding: '1.5rem',
+                    margin: '0 auto',
+                    maxWidth: '190mm',
+                    width: '100%',
+                    boxSizing: 'border-box'
+                }}>
+                    {/* Header */}
+                    <div style={{ borderBottom: '2px solid #000000', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div>
-                                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1c1917', marginBottom: '0.25rem' }}>File Audit Report</h1>
-                                <p style={{ color: '#78716c', fontSize: '0.875rem' }}>Generated Checklist & Audit Trail</p>
+                                <h1 style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#000000', marginBottom: '0.25rem' }}>File Audit Report</h1>
+                                <p style={{ color: '#000000', fontSize: '0.875rem' }}>Generated Checklist & Audit Trail</p>
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#1c1917', backgroundColor: '#f5f5f4', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', display: 'inline-block', marginBottom: '0.25rem' }}>
+                                <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#000000', marginBottom: '0.25rem' }}>
                                     {new Date().toLocaleString('en-IN')}
                                 </div>
-                                <div style={{ fontSize: '0.75rem', color: '#78716c' }}>
-                                    Status: <span style={{ fontWeight: '500', color: '#1c1917' }}>{stats.checked}/{stats.total} Completed</span>
+                                <div style={{ fontSize: '0.875rem', color: '#000000' }}>
+                                    Status: <span style={{ fontWeight: 'bold' }}>{stats.checked}/{stats.total} Completed</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    {/* File List */}
                     <div>
                         {filteredFiles.length > 0 ? (
                             filteredFiles.map((file, index) => (
@@ -116,123 +87,90 @@ export function PrintPreview({
                                         alignItems: 'flex-start',
                                         gap: '0.75rem',
                                         padding: '0.75rem 0',
-                                        borderBottom: index !== filteredFiles.length - 1 ? '1px solid #f5f5f4' : 'none',
+                                        borderBottom: index !== filteredFiles.length - 1 ? '1px solid #cccccc' : 'none',
                                         pageBreakInside: 'avoid'
                                     }}
                                 >
-                                    <div style={{ marginTop: '0.125rem', color: file.checked ? '#2563eb' : '#d6d3d1' }}>
-                                        {file.checked ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                                    {/* Checkbox */}
+                                    <div style={{ marginTop: '0.125rem', color: '#000000', flexShrink: 0 }}>
+                                        {file.checked ? (
+                                            <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>☑</span>
+                                        ) : (
+                                            <span style={{ fontSize: '1rem' }}>☐</span>
+                                        )}
                                     </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                            <span style={{ position: 'relative', display: 'inline-block', overflow: 'visible' }}>
-                                                <span
-                                                    style={{
-                                                        fontWeight: '500',
-                                                        fontSize: '0.875rem',
-                                                        color: file.checked ? '#a8a29e' : '#1c1917',
-                                                        wordBreak: 'break-word',
-                                                        overflowWrap: 'break-word'
-                                                    }}
-                                                >
-                                                    {file.name}
-                                                </span>
-                                                {file.checked && (
-                                                    <span style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: '1rem', pointerEvents: 'none', zIndex: 20, overflow: 'visible' }}>
-                                                        <svg
-                                                            viewBox="0 0 100 12"
-                                                            preserveAspectRatio="none"
-                                                            style={{ width: '100%', height: '100%' }}
-                                                        >
-                                                            <path
-                                                                d="M0,10 L100,2"
-                                                                vectorEffect="non-scaling-stroke"
-                                                                stroke="#ef4444"
-                                                                strokeWidth="2"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                style={{ opacity: 0.9 }}
-                                                            />
-                                                        </svg>
-                                                    </span>
-                                                )}
-                                            </span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
 
-                                                <span
-                                                    style={{
-                                                        fontSize: '9px',
-                                                        fontWeight: 'bold',
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.05em',
-                                                        padding: '0.125rem 0.375rem',
-                                                        borderRadius: '0.25rem',
-                                                        border: '1px solid',
-                                                        backgroundColor: file.priority === 'high' ? '#fef2f2' : file.priority === 'low' ? '#f0fdf4' : '#fefce8',
-                                                        color: file.priority === 'high' ? '#dc2626' : file.priority === 'low' ? '#16a34a' : '#ca8a04',
-                                                        borderColor: file.priority === 'high' ? '#fecaca' : file.priority === 'low' ? '#bbf7d0' : '#fef08a'
-                                                    }}
-                                                >
-                                                    {file.priority}
-                                                </span>
-                                                {file.hasChanges && (
-                                                    <span
-                                                        style={{
-                                                            fontSize: '9px',
-                                                            fontWeight: 'bold',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.05em',
-                                                            padding: '0.125rem 0.375rem',
-                                                            borderRadius: '0.25rem',
-                                                            backgroundColor: '#fff7ed',
-                                                            color: '#ea580c',
-                                                            border: '1px solid #fed7aa'
-                                                        }}
-                                                    >
-                                                        Changed
-                                                    </span>
-                                                )}
-                                                <span
-                                                    style={{
-                                                        fontSize: '10px',
-                                                        fontWeight: 'bold',
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.05em',
-                                                        padding: '0.125rem 0.375rem',
-                                                        borderRadius: '0.25rem',
-                                                        backgroundColor: file.checked ? '#eff6ff' : '#f5f5f4',
-                                                        color: file.checked ? '#1d4ed8' : '#78716c'
-                                                    }}
-                                                >
-                                                    {file.checked ? 'Done' : 'Pending'}
-                                                </span>
-                                            </div>
+                                    {/* File Info */}
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        {/* Filename - Prominent */}
+                                        <div style={{
+                                            fontSize: '0.875rem',
+                                            fontWeight: 'bold',
+                                            color: '#000000',
+                                            marginBottom: '0.25rem',
+                                            fontFamily: 'monospace',
+                                            wordBreak: 'break-all',
+                                            overflowWrap: 'break-word'
+                                        }}>
+                                            {file.name}
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+
+                                        {/* Metadata Row */}
+                                        <div style={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            alignItems: 'center',
+                                            gap: '1rem',
+                                            fontSize: '0.75rem',
+                                            color: '#000000',
+                                            marginBottom: file.notes ? '0.25rem' : 0
+                                        }}>
+                                            <span style={{ textTransform: 'uppercase', fontWeight: '600' }}>
+                                                [{file.priority}]
+                                            </span>
+                                            <span>
+                                                {file.checked ? '✓ Done' : '○ Pending'}
+                                            </span>
+                                            {file.hasChanges && (
+                                                <span style={{ fontWeight: '600' }}>
+                                                    [CHANGED]
+                                                </span>
+                                            )}
                                             {file.checkedAt && (
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '10px', color: '#a8a29e' }}>
-                                                    <Clock size={10} /> Checked: {formatDate(file.checkedAt)}
-                                                </div>
-                                            )}
-                                            {file.notes && (
-                                                <div style={{ color: '#57534e', fontSize: '0.75rem', backgroundColor: '#fafaf9', padding: '0.125rem 0.5rem', borderRadius: '0.25rem', border: '1px solid #f5f5f4', fontStyle: 'italic', display: 'inline-block', width: 'fit-content' }}>
-                                                    {file.notes}
-                                                </div>
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                                    Checked: {formatDate(file.checkedAt)}
+                                                </span>
                                             )}
                                         </div>
+
+                                        {/* Notes */}
+                                        {file.notes && (
+                                            <div style={{
+                                                color: '#000000',
+                                                fontSize: '0.75rem',
+                                                fontStyle: 'italic',
+                                                paddingLeft: '0.5rem',
+                                                borderLeft: '2px solid #000000'
+                                            }}>
+                                                {file.notes}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '2rem 0', color: '#a8a29e', fontStyle: 'italic', fontSize: '0.875rem' }}>
+                            <div style={{ textAlign: 'center', padding: '2rem 0', color: '#000000', fontStyle: 'italic', fontSize: '0.875rem' }}>
                                 No files included in this report.
                             </div>
                         )}
+                    </div>
+
+                    {/* Footer */}
+                    <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #cccccc', fontSize: '0.75rem', color: '#000000', textAlign: 'center' }}>
+                        Generated by File Audit Checklist
                     </div>
                 </div>
             </div>
         </div>
     );
 }
-

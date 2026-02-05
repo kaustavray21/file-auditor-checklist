@@ -45,18 +45,21 @@ export function useImportExport({ files, importFiles }) {
         if (window.html2pdf) {
             document.body.style.cursor = 'wait';
             const opt = {
-                margin: [10, 10, 10, 10],
+                margin: [5, 5, 5, 5],
                 filename: `checklist-report-${new Date().toISOString().slice(0, 10)}.pdf`,
-                image: { type: 'jpeg', quality: 0.85 },
+                image: { type: 'jpeg', quality: 0.95 },
                 html2canvas: {
-                    scale: 1.5,
+                    scale: 2,
                     useCORS: true,
                     logging: false,
-                    allowTaint: true,
-                    removeContainer: true,
+                    backgroundColor: '#ffffff',
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: -window.scrollY,
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+                pagebreak: { mode: 'avoid-all', before: '.page-break' }
             };
 
             window.html2pdf()

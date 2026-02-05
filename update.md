@@ -2,12 +2,14 @@
 
 ## Features Added
 
-### 1. PDF Report - Inline Change Markings
-- Replaced the separate "Changed Files" section with inline **orange** "Changed" badges
-- Badges appear directly next to the file priority for easier scanning
-- Uses unique orange color (`#fff7ed` bg, `#ea580c` text) distinct from other badges
-- Report structure is now more concise and professional
-- File: `src/views/PrintPreview.jsx`
+### 1. Black & White Print System
+- **Total Redesign**: Switched to a pure Black & White layout for professional printing
+- **Removed Colors**: No colored badges or backgrounds; text is pure black on white
+- **No Strikethroughs**: Removed strikethrough effects on completed tasks for better clarity
+- **Prominent Filenames**: Used bold monospace fonts for filenames to ensure they stand out
+- **Improved Alignment**: Optimized content width (190mm max) and added word-wrapping (`break-all`) to prevent cutoff on A4 pages
+- **Native Printing**: Removed "Download PDF" button to encourage using the browser's superior "Print to PDF" dialog
+- **Files**: `src/views/PrintPreview.jsx`, `src/hooks/useImportExport.js`
 
 ### 2. Resizable Sidebar
 - VS Code-style draggable resize handle on sidebar
@@ -76,5 +78,5 @@
 | `src/components/files/FileListItem.jsx` | React.memo wrapper |
 | `src/components/sidebar/FileTreeItem.jsx` | React.memo wrapper |
 | `src/components/filters/FilterBar.jsx` | React.memo, filter badges |
-| `src/views/PrintPreview.jsx` | Changed files section |
+| `src/views/PrintPreview.jsx` | Black & White layout, wrap-text fix |
 | `src/App.jsx` | Resizable sidebar integration |
