@@ -6,7 +6,7 @@ import {
     Folder,
     FolderOpen,
 } from 'lucide-react';
-import { getFileIcon } from '../../utils/fileIcons';
+import { getFileIcon } from '../../utils/icons';
 
 export const FileTreeItem = memo(function FileTreeItem({
     node,

@@ -6,14 +6,14 @@ import { useFileManager } from './hooks/useFileManager';
 // Components
 import { ClearConfirmModal } from './components/modals/ClearConfirmModal';
 import { AddFileModal } from './components/modals/AddFileModal';
-import { FileTreeItem } from './components/sidebar/FileTreeItem';
-import { ExplorerToolbar } from './components/sidebar/ExplorerToolbar';
-import { SidebarFooter } from './components/sidebar/SidebarFooter';
+import { FileTreeItem } from './components/explorer/FileTreeItem';
+import { ExplorerToolbar } from './components/explorer/ExplorerToolbar';
+import { ExplorerFooter } from './components/explorer/ExplorerFooter';
 import { Header } from './components/header/Header';
 import { FilterBar } from './components/filters/FilterBar';
 import { FileListItem } from './components/files/FileListItem';
 import { EmptyState } from './components/files/EmptyState';
-import { RightSidebar } from './components/notes/RightSidebar';
+import { NotesPanel } from './components/notes/NotesPanel';
 
 // Views
 import { PrintPreview } from './views/PrintPreview';
@@ -196,7 +196,7 @@ export default function App() {
           )}
         </div>
 
-        <SidebarFooter itemCount={files.length} />
+        <ExplorerFooter itemCount={files.length} />
 
         {/* Resize Handle */}
         {isSidebarOpen && (
@@ -278,7 +278,7 @@ export default function App() {
       </main>
 
       {/* Right Sidebar - Notes Panel */}
-      <RightSidebar
+      <NotesPanel
         notes={notes}
         isOpen={isRightSidebarOpen}
         onToggle={toggleRightSidebar}

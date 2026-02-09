@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { STORAGE_KEYS } from '../constants';
 
 /**
  * Hook for managing resizable sidebar functionality.
@@ -10,7 +11,7 @@ export function useSidebarResize() {
     const DEFAULT_WIDTH = 384; // 96 * 4 = w-96 in Tailwind
 
     const [sidebarWidth, setSidebarWidth] = useState(() => {
-        const saved = localStorage.getItem('sidebarWidth');
+        const saved = localStorage.getItem(STORAGE_KEYS.SIDEBAR_WIDTH);
         return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
     });
 
@@ -82,7 +83,7 @@ export function useSidebarResize() {
 
             // Sync final width to React state and localStorage
             setSidebarWidth(currentWidthRef.current);
-            localStorage.setItem('sidebarWidth', currentWidthRef.current.toString());
+            localStorage.setItem(STORAGE_KEYS.SIDEBAR_WIDTH, currentWidthRef.current.toString());
         };
 
         // Add listeners to document for global mouse tracking

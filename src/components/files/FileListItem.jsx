@@ -1,6 +1,7 @@
 import { memo, useState, useEffect, useCallback, useRef } from 'react';
 import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine, Copy } from 'lucide-react';
-import { getPriorityColor, formatDate } from '../../utils/helpers';
+import { getPriorityColor } from '../../utils/colors';
+import { formatDate } from '../../utils/formatters';
 
 export const FileListItem = memo(function FileListItem({
     file,

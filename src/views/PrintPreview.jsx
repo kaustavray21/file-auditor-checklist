@@ -1,5 +1,5 @@
 import { ArrowLeft, Printer, Download, CheckCircle2, Circle, Clock } from 'lucide-react';
-import { formatDate } from '../utils/helpers';
+import { formatDate } from '../utils/formatters';
 
 export function PrintPreview({
     filteredFiles,

@@ -1,7 +1,8 @@
+import { useRef, useEffect } from 'react';
 import { StickyNote, Plus, ChevronRight, ChevronLeft } from 'lucide-react';
 import { NoteCard } from './NoteCard';
 
-export function RightSidebar({
+export function NotesPanel({
     notes,
     isOpen,
     onToggle,
@@ -9,6 +10,25 @@ export function RightSidebar({
     onUpdateNote,
     onDeleteNote,
 }) {
+    const sidebarRef = useRef(null);
+
+    // Close panel when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                onToggle();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, onToggle]);
+
     return (
         <>
             {/* Toggle button when closed */}
@@ -25,6 +45,7 @@ export function RightSidebar({
 
             {/* Sidebar */}
             <aside
+                ref={sidebarRef}
                 style={{ width: isOpen ? '280px' : '0' }}
                 className="flex-none bg-[#f5f2eb] border-l border-stone-200 flex flex-col transition-all duration-300 overflow-hidden"
             >

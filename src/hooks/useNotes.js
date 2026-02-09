@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-
-const STORAGE_KEY = 'fileAuditor_notes';
+import { STORAGE_KEYS } from '../constants';
 
 /**
  * Hook for managing standalone note cards.
@@ -9,7 +8,7 @@ const STORAGE_KEY = 'fileAuditor_notes';
 export function useNotes() {
     const [notes, setNotes] = useState(() => {
         try {
-            const saved = localStorage.getItem(STORAGE_KEY);
+            const saved = localStorage.getItem(STORAGE_KEYS.NOTES);
             return saved ? JSON.parse(saved) : [];
         } catch {
             return [];
@@ -18,7 +17,7 @@ export function useNotes() {
 
     const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(() => {
         try {
-            const saved = localStorage.getItem('fileAuditor_rightSidebarOpen');
+            const saved = localStorage.getItem(STORAGE_KEYS.RIGHT_SIDEBAR_OPEN);
             return saved ? JSON.parse(saved) : true;
         } catch {
             return true;
@@ -32,7 +31,7 @@ export function useNotes() {
             clearTimeout(saveTimeoutRef.current);
         }
         saveTimeoutRef.current = setTimeout(() => {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+            localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
         }, 300); // 300ms debounce
 
         return () => {
@@ -44,7 +43,7 @@ export function useNotes() {
 
     // Persist sidebar state
     useEffect(() => {
-        localStorage.setItem('fileAuditor_rightSidebarOpen', JSON.stringify(isRightSidebarOpen));
+        localStorage.setItem(STORAGE_KEYS.RIGHT_SIDEBAR_OPEN, JSON.stringify(isRightSidebarOpen));
     }, [isRightSidebarOpen]);
 
     // Add a new note

@@ -1,3 +1,42 @@
+# Update Log - February 9, 2026 (Evening Update)
+
+## 1. Code Restructuring & Cleanup
+- **Direct Imports**: Removed all `index.js` barrel files to verify component structure and simplify imports.
+- **Renamed Components**:
+  - `components/sidebar` → `components/explorer` (Folder rename)
+  - `RightSidebar.jsx` → `NotesPanel.jsx` (Component rename)
+  - `SidebarFooter.jsx` → `ExplorerFooter.jsx` (Component rename)
+- **Centralized Constants**: Created `src/constants/index.js` to manage all magic strings, storage keys, and configuration.
+- **Utils Refactoring**: Split monolithic `helpers.js` into focused modules: `formatters.js`, `colors.js`, and `icons.jsx`.
+
+## 2. Performance Fixes
+- **Notes Typing Latency**: Resolved input lag in both the Notes Panel and File List notes by implementing local state with 300ms debounced synchronization to parent state.
+
+## 3. UI/UX Enhancements
+- **Click Outside to Close**: Added functionality to automatically close the Notes Panel when clicking outside it.
+- **Visual Updates**:
+  - Changed Notes toggle button to **Amber-500** for better visibility.
+  - Positioned Notes button higher for easier access.
+  - Added "Notes" text label to the toggle button.
+
+## Files Modified
+- **Renamed/Moved**:
+  - `src/components/explorer/` (was sidebar)
+  - `src/components/notes/NotesPanel.jsx` (was RightSidebar)
+  - `src/components/explorer/ExplorerFooter.jsx` (was SidebarFooter)
+  - `src/utils/icons.jsx` (was fileIcons.jsx)
+- **New**:
+  - `src/constants/index.js`
+  - `src/utils/formatters.js`
+  - `src/utils/colors.js`
+- **Updated**:
+  - `src/App.jsx`
+  - `src/hooks/useFiles.js`
+  - `src/hooks/useNotes.js`
+  - `src/components/files/FileListItem.jsx`
+
+---
+
 # Update Log - February 9, 2026
 
 ## Features Added

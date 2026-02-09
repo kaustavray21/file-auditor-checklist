@@ -1,13 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-
-const DEFAULT_FILES = [
-    { id: 1, name: 'index.html', checked: true, notes: 'Main entry point validated', priority: 'high', checkedAt: new Date().toISOString() },
-    { id: 2, name: 'styles.css', checked: false, notes: '', priority: 'medium', checkedAt: null },
-    { id: 3, name: 'src/app.js', checked: false, notes: 'Needs refactoring on line 45', priority: 'high', checkedAt: null },
-    { id: 4, name: 'src/components/Header.js', checked: true, notes: 'Component finalized', priority: 'low', checkedAt: new Date().toISOString() },
-    { id: 5, name: 'src/utils/helpers.js', checked: false, notes: '', priority: 'medium', checkedAt: null },
-    { id: 6, name: 'README.md', checked: false, notes: '', priority: 'medium', checkedAt: null },
-];
+import { STORAGE_KEYS, DEFAULT_FILES } from '../constants';
 
 /**
  * Hook for managing core file CRUD operations and persistence.
@@ -15,7 +7,7 @@ const DEFAULT_FILES = [
  */
 export function useFiles() {
     const [files, setFiles] = useState(() => {
-        const saved = localStorage.getItem('checklist-data');
+        const saved = localStorage.getItem(STORAGE_KEYS.FILES);
         if (saved) {
             try {
                 return JSON.parse(saved);
@@ -35,7 +27,7 @@ export function useFiles() {
         }
         // Debounce localStorage writes by 500ms
         saveTimeoutRef.current = setTimeout(() => {
-            localStorage.setItem('checklist-data', JSON.stringify(files));
+            localStorage.setItem(STORAGE_KEYS.FILES, JSON.stringify(files));
         }, 500);
 
         return () => {

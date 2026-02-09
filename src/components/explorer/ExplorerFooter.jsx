@@ -1,6 +1,6 @@
 import { Github, Linkedin, Mail } from 'lucide-react';
 
-export function SidebarFooter({ itemCount }) {
+export function ExplorerFooter({ itemCount }) {
     return (
         <div className="border-t border-stone-200 bg-[#f5f2eb] p-6">
             <div className="text-base font-medium text-stone-500 text-center mb-4">
