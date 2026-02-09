@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback, useRef } from 'react';
+import { memo, useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine, Copy } from 'lucide-react';
 import { getPriorityColor } from '../../utils/colors';
 import { formatDate } from '../../utils/formatters';
@@ -12,9 +12,6 @@ export const FileListItem = memo(function FileListItem({
     onDelete,
     onReveal,
 }) {
-    // Context menu state
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
-
     // Local state for smooth typing
     const [localNotes, setLocalNotes] = useState(file.notes);
 
@@ -39,61 +36,20 @@ export const FileListItem = memo(function FileListItem({
         }
     }, [localNotes, file.notes, file.id, onNoteChange]);
 
-    // Handle right-click on file name
-    const handleContextMenu = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
-    }, []);
-
     // Copy path to clipboard
     const handleCopyPath = useCallback(async () => {
         try {
             await navigator.clipboard.writeText(file.name);
-            setContextMenu({ visible: false, x: 0, y: 0 });
         } catch (err) {
             console.error('Failed to copy path:', err);
         }
     }, [file.name]);
-
-    // Close context menu on click outside
-    useEffect(() => {
-        if (!contextMenu.visible) return;
-
-        const handleClickOutside = () => {
-            setContextMenu({ visible: false, x: 0, y: 0 });
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        document.addEventListener('contextmenu', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-            document.removeEventListener('contextmenu', handleClickOutside);
-        };
-    }, [contextMenu.visible]);
 
     return (
         <div
             className={`group bg-white p-4 rounded-xl border transition-all hover:shadow-md ${file.checked ? 'border-blue-200 bg-blue-50/30' : 'border-stone-200'
                 }`}
         >
-            {/* Context Menu */}
-            {contextMenu.visible && (
-                <div
-                    className="fixed z-50 bg-white border border-stone-200 rounded-lg shadow-lg py-1 min-w-[160px]"
-                    style={{ left: contextMenu.x, top: contextMenu.y }}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <button
-                        onClick={handleCopyPath}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-stone-700 hover:bg-stone-100 transition-colors"
-                    >
-                        <Copy size={14} />
-                        Copy Path
-                    </button>
-                </div>
-            )}
 
             {/* Main row - uses grid for consistent column sizing */}
             <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-start">
@@ -118,14 +74,11 @@ export const FileListItem = memo(function FileListItem({
                         onClick={() => onToggle(file.id)}
                     >
                         {/* File name with strikethrough */}
-                        <span
-                            className="relative inline-flex items-center min-w-0"
-                            onContextMenu={handleContextMenu}
-                        >
+                        <span className="relative inline-flex items-center min-w-0">
                             <span
                                 className={`font-medium text-base transition-all truncate max-w-[200px] sm:max-w-[280px] ${file.checked ? 'text-stone-400' : 'text-stone-800'
                                     }`}
-                                title={`${file.name} (Right-click to copy path)`}
+                                title={file.name}
                             >
                                 {file.name.split('/').pop()}
                             </span>
@@ -200,6 +153,16 @@ export const FileListItem = memo(function FileListItem({
 
                 {/* Action buttons */}
                 <div className={`flex gap-1 items-start flex-shrink-0 transition-opacity ${file.hasChanges ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCopyPath();
+                        }}
+                        className="p-1.5 text-stone-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                        title="Copy Path"
+                    >
+                        <Copy size={16} />
+                    </button>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();

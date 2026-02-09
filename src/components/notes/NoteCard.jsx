@@ -1,5 +1,5 @@
-import { memo, useState, useEffect, useRef } from 'react';
-import { Trash2, ChevronDown, ChevronUp, Palette } from 'lucide-react';
+import { memo, useState, useEffect, useRef, useCallback } from 'react';
+import { Trash2, ChevronDown, ChevronUp, Palette, Copy } from 'lucide-react';
 
 const colorClasses = {
     default: 'bg-white border-stone-300',
@@ -72,6 +72,15 @@ export const NoteCard = memo(function NoteCard({ note, onUpdate, onDelete }) {
         }
     };
 
+    // Copy note content to clipboard
+    const handleCopyContent = useCallback(async () => {
+        try {
+            await navigator.clipboard.writeText(localContent);
+        } catch (err) {
+            console.error('Failed to copy content:', err);
+        }
+    }, [localContent]);
+
     return (
         <div
             className={`rounded-lg border-2 shadow-sm transition-all ${colorClasses[note.color] || colorClasses.default}`}
@@ -97,6 +106,13 @@ export const NoteCard = memo(function NoteCard({ note, onUpdate, onDelete }) {
 
                 {/* Action buttons - grouped together inside card */}
                 <div className="flex items-center gap-0.5 bg-stone-100 rounded-md p-0.5 flex-shrink-0 relative" ref={colorPickerRef}>
+                    <button
+                        onClick={handleCopyContent}
+                        className="p-1.5 text-stone-600 hover:text-green-600 hover:bg-white rounded transition-colors"
+                        title="Copy content"
+                    >
+                        <Copy size={15} />
+                    </button>
                     <button
                         onClick={() => setShowColorPicker(!showColorPicker)}
                         className="p-1.5 text-stone-600 hover:text-blue-600 hover:bg-white rounded transition-colors"
