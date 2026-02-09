@@ -10,6 +10,26 @@
 - **Bug Fix**: Fixed import logic to support the new JSON structure with metadata
 - **Files Modified**: `src/hooks/useImportExport.js`, `src/hooks/useFileManager.js`
 
+### 2. Copy Path Context Menu
+- **Right-Click to Copy**: Right-click on any file name in the list to access "Copy Path" option
+- **Clipboard Integration**: Full file path is copied to clipboard for easy pasting
+- **Clean UX**: Context menu auto-closes when clicking outside or right-clicking elsewhere
+- **Visual Hint**: Tooltip shows "(Right-click to copy path)" on hover
+- **Files Modified**: `src/components/files/FileListItem.jsx`
+
+### 3. Collapsible Right Sidebar - Notes Panel
+- **Standalone Notes**: Create, edit, and delete note cards separate from file items
+- **Collapsible Panel**: Click chevron arrow on right edge to toggle visibility
+- **Persistent Storage**: Notes and sidebar state saved to localStorage
+- **Color Coding**: 5 color options (default, yellow, blue, green, pink) for visual organization
+- **Expandable Cards**: Each note card can be collapsed/expanded individually
+- **Real-time Editing**: Title and content editable inline with auto-save
+- **New Files**:
+  - `src/hooks/useNotes.js` - Notes state management hook
+  - `src/components/notes/NoteCard.jsx` - Individual note card component
+  - `src/components/notes/RightSidebar.jsx` - Right sidebar container
+- **Files Modified**: `src/hooks/useFileManager.js`, `src/App.jsx`
+
 ### JSON Export Format
 ```json
 {

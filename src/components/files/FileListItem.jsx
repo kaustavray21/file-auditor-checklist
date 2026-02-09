@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine } from 'lucide-react';
+import { memo, useState, useEffect, useCallback, useRef } from 'react';
+import { CheckCircle2, Circle, Trash2, Clock, FolderSymlink, FilePenLine, Copy } from 'lucide-react';
 import { getPriorityColor, formatDate } from '../../utils/helpers';
 
 export const FileListItem = memo(function FileListItem({
@@ -11,11 +11,89 @@ export const FileListItem = memo(function FileListItem({
     onDelete,
     onReveal,
 }) {
+    // Context menu state
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+
+    // Local state for smooth typing
+    const [localNotes, setLocalNotes] = useState(file.notes);
+
+    // Sync from props when file.notes changes externally
+    useEffect(() => {
+        setLocalNotes(file.notes);
+    }, [file.notes]);
+
+    // Debounced sync to parent (300ms)
+    useEffect(() => {
+        if (localNotes === file.notes) return;
+        const timeout = setTimeout(() => {
+            onNoteChange(file.id, localNotes);
+        }, 300);
+        return () => clearTimeout(timeout);
+    }, [localNotes, file.id, file.notes, onNoteChange]);
+
+    // Sync immediately on blur
+    const handleNotesBlur = useCallback(() => {
+        if (localNotes !== file.notes) {
+            onNoteChange(file.id, localNotes);
+        }
+    }, [localNotes, file.notes, file.id, onNoteChange]);
+
+    // Handle right-click on file name
+    const handleContextMenu = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+    }, []);
+
+    // Copy path to clipboard
+    const handleCopyPath = useCallback(async () => {
+        try {
+            await navigator.clipboard.writeText(file.name);
+            setContextMenu({ visible: false, x: 0, y: 0 });
+        } catch (err) {
+            console.error('Failed to copy path:', err);
+        }
+    }, [file.name]);
+
+    // Close context menu on click outside
+    useEffect(() => {
+        if (!contextMenu.visible) return;
+
+        const handleClickOutside = () => {
+            setContextMenu({ visible: false, x: 0, y: 0 });
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        document.addEventListener('contextmenu', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('contextmenu', handleClickOutside);
+        };
+    }, [contextMenu.visible]);
+
     return (
         <div
             className={`group bg-white p-4 rounded-xl border transition-all hover:shadow-md ${file.checked ? 'border-blue-200 bg-blue-50/30' : 'border-stone-200'
                 }`}
         >
+            {/* Context Menu */}
+            {contextMenu.visible && (
+                <div
+                    className="fixed z-50 bg-white border border-stone-200 rounded-lg shadow-lg py-1 min-w-[160px]"
+                    style={{ left: contextMenu.x, top: contextMenu.y }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <button
+                        onClick={handleCopyPath}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-stone-700 hover:bg-stone-100 transition-colors"
+                    >
+                        <Copy size={14} />
+                        Copy Path
+                    </button>
+                </div>
+            )}
+
             {/* Main row - uses grid for consistent column sizing */}
             <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-start">
                 {/* Checkbox */}
@@ -39,11 +117,14 @@ export const FileListItem = memo(function FileListItem({
                         onClick={() => onToggle(file.id)}
                     >
                         {/* File name with strikethrough */}
-                        <span className="relative inline-flex items-center min-w-0">
+                        <span
+                            className="relative inline-flex items-center min-w-0"
+                            onContextMenu={handleContextMenu}
+                        >
                             <span
                                 className={`font-medium text-base transition-all truncate max-w-[200px] sm:max-w-[280px] ${file.checked ? 'text-stone-400' : 'text-stone-800'
                                     }`}
-                                title={file.name}
+                                title={`${file.name} (Right-click to copy path)`}
                             >
                                 {file.name.split('/').pop()}
                             </span>
@@ -99,8 +180,9 @@ export const FileListItem = memo(function FileListItem({
                     <div className="flex items-center gap-2">
                         <input
                             type="text"
-                            value={file.notes}
-                            onChange={(e) => onNoteChange(file.id, e.target.value)}
+                            value={localNotes}
+                            onChange={(e) => setLocalNotes(e.target.value)}
+                            onBlur={handleNotesBlur}
                             placeholder="Add notes..."
                             className={`w-full bg-stone-50/50 border border-stone-200 focus:border-blue-400 focus:bg-white px-3 py-1.5 rounded-md outline-none text-sm text-stone-600 placeholder-stone-400 transition-all ${file.checked ? 'opacity-75' : ''
                                 }`}

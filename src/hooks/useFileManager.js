@@ -5,6 +5,7 @@ import { useModals } from './useModals';
 import { useImportExport } from './useImportExport';
 import { useDragAndDrop } from './useDragAndDrop';
 import { useSidebarResize } from './useSidebarResize';
+import { useNotes } from './useNotes';
 
 /**
  * Main composition hook that combines all file management functionality.
@@ -110,6 +111,16 @@ export function useFileManager() {
         handleMouseDown,
     } = useSidebarResize();
 
+    // Notes functionality
+    const {
+        notes,
+        isRightSidebarOpen,
+        toggleRightSidebar,
+        addNote,
+        updateNote,
+        deleteNote,
+    } = useNotes();
+
     return {
         // State
         files,
@@ -179,5 +190,13 @@ export function useFileManager() {
         sidebarWidth,
         isResizing,
         handleSidebarMouseDown: handleMouseDown,
+
+        // Notes
+        notes,
+        isRightSidebarOpen,
+        toggleRightSidebar,
+        addNote,
+        updateNote,
+        deleteNote,
     };
 }

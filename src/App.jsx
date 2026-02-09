@@ -13,6 +13,7 @@ import { Header } from './components/header/Header';
 import { FilterBar } from './components/filters/FilterBar';
 import { FileListItem } from './components/files/FileListItem';
 import { EmptyState } from './components/files/EmptyState';
+import { RightSidebar } from './components/notes/RightSidebar';
 
 // Views
 import { PrintPreview } from './views/PrintPreview';
@@ -87,6 +88,14 @@ export default function App() {
     sidebarWidth,
     isResizing,
     handleSidebarMouseDown,
+
+    // Notes
+    notes,
+    isRightSidebarOpen,
+    toggleRightSidebar,
+    addNote,
+    updateNote,
+    deleteNote,
   } = useFileManager();
 
   // Render Print Preview
@@ -213,9 +222,10 @@ export default function App() {
           </button>
         )}
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-          <div className="max-w-5xl mx-auto flex flex-col min-h-full">
-            <div className="flex-1">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Sticky Header Section */}
+          <div className="sticky top-0 z-10 bg-[#fdfbf7] px-4 md:px-8 pt-4 md:pt-8">
+            <div className="max-w-5xl mx-auto">
               <Header
                 stats={stats}
                 selectedFolder={selectedFolder}
@@ -238,8 +248,13 @@ export default function App() {
                 onAddFile={handleAddFile}
                 filterCounts={filterCounts}
               />
+            </div>
+          </div>
 
-              <div className="space-y-3 pb-8">
+          {/* Scrollable File List */}
+          <div className="flex-1 overflow-y-auto px-4 md:px-8 pb-8 custom-scrollbar">
+            <div className="max-w-5xl mx-auto">
+              <div className="space-y-3">
                 {filteredFiles.length > 0 ? (
                   filteredFiles.map((file) => (
                     <FileListItem
@@ -261,6 +276,16 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* Right Sidebar - Notes Panel */}
+      <RightSidebar
+        notes={notes}
+        isOpen={isRightSidebarOpen}
+        onToggle={toggleRightSidebar}
+        onAddNote={addNote}
+        onUpdateNote={updateNote}
+        onDeleteNote={deleteNote}
+      />
     </div>
   );
 }

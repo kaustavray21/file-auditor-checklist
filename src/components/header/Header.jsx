@@ -13,7 +13,7 @@ export function Header({
 }) {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 mb-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 ml-8 md:ml-0">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 ml-8 md:ml-0">
                 <div>
                     <h1 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
                         <FileText className="text-blue-600" />
@@ -64,6 +64,8 @@ export function Header({
                     </button>
                 </div>
             </div>
+
+            {/* Progress bar section */}
 
             <div className="w-full bg-stone-100 rounded-full h-4 mb-2 overflow-hidden">
                 <div
