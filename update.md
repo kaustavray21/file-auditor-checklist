@@ -1,3 +1,37 @@
+# Update Log - February 9, 2026
+
+## Features Added
+
+### 1. Section-Based JSON Export
+- **Current View Export**: JSON export now only includes files from the currently viewed section/folder
+- **Change Status Tracking**: Added `hasChanges` field to each file in the exported JSON
+- **Enhanced Metadata**: Export includes section name, total file count, and count of changed files
+- **Dynamic Filename**: Export filename now includes the section name (e.g., `checklist-src-components-2026-02-09.json`)
+- **Files Modified**: `src/hooks/useImportExport.js`, `src/hooks/useFileManager.js`
+
+### JSON Export Format
+```json
+{
+  "exportDate": "2026-02-09T12:00:00.000Z",
+  "section": "src/components",
+  "totalFiles": 10,
+  "changedFiles": 3,
+  "files": [
+    {
+      "id": 1,
+      "name": "src/components/Button.jsx",
+      "checked": true,
+      "notes": "Updated styling",
+      "priority": "high",
+      "checkedAt": "2026-02-09T10:00:00.000Z",
+      "hasChanges": true
+    }
+  ]
+}
+```
+
+---
+
 # Update Log - February 5, 2026
 
 ## Features Added

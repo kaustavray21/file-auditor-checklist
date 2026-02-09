@@ -90,7 +90,7 @@ export function useFileManager() {
         handleDownloadPDF,
         handleImportClick,
         handleFileChange,
-    } = useImportExport({ files, importFiles });
+    } = useImportExport({ files, importFiles, filteredFiles, selectedFolder });
 
     // Drag and drop functionality
     const {

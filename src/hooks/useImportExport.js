@@ -2,8 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 
 /**
  * Hook for managing import/export and PDF functionality.
+ * @param {Object} options - Hook options
+ * @param {Array} options.files - All files in the system
+ * @param {Function} options.importFiles - Function to import files
+ * @param {Array} options.filteredFiles - Currently filtered/displayed files
+ * @param {string|null} options.selectedFolder - Currently selected folder path
  */
-export function useImportExport({ files, importFiles }) {
+export function useImportExport({ files, importFiles, filteredFiles, selectedFolder }) {
     const [isPdfLibLoaded, setIsPdfLibLoaded] = useState(false);
     const fileInputRef = useRef(null);
 
@@ -23,12 +28,34 @@ export function useImportExport({ files, importFiles }) {
     }, []);
 
     const handleExportJSON = () => {
-        const dataStr = JSON.stringify(files, null, 2);
+        // Export only the currently viewed/filtered files
+        const exportData = filteredFiles.map(file => ({
+            id: file.id,
+            name: file.name,
+            checked: file.checked,
+            notes: file.notes || '',
+            priority: file.priority || 'medium',
+            checkedAt: file.checkedAt || null,
+            hasChanges: file.hasChanges || false, // Include change status
+        }));
+
+        // Create export object with metadata
+        const exportPayload = {
+            exportDate: new Date().toISOString(),
+            section: selectedFolder || 'All Files',
+            totalFiles: exportData.length,
+            changedFiles: exportData.filter(f => f.hasChanges).length,
+            files: exportData,
+        };
+
+        const dataStr = JSON.stringify(exportPayload, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `checklist-export-${new Date().toISOString().slice(0, 10)}.json`;
+        // Include section name in filename
+        const sectionName = selectedFolder ? selectedFolder.replace(/\//g, '-') : 'all-files';
+        link.download = `checklist-${sectionName}-${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
