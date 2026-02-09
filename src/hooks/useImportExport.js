@@ -112,23 +112,44 @@ export function useImportExport({ files, importFiles, filteredFiles, selectedFol
 
     const handleFileChange = (e) => {
         const fileReader = new FileReader();
-        fileReader.readAsText(e.target.files[0], "UTF-8");
-        fileReader.onload = (event) => {
-            try {
-                const parsed = JSON.parse(event.target.result);
-                const standardized = Array.isArray(parsed) ? parsed.map((item, idx) => ({
-                    id: item.id || Date.now() + idx,
-                    name: item.name || item.filename || 'Unknown File',
-                    checked: !!item.checked,
-                    notes: item.notes || '',
-                    priority: item.priority || 'medium',
-                    checkedAt: item.checkedAt || (item.checked ? new Date().toISOString() : null)
-                })) : [];
-                importFiles(standardized);
-            } catch (err) {
-                console.error('Invalid JSON file format');
-            }
-        };
+        if (e.target.files && e.target.files.length > 0) {
+            fileReader.readAsText(e.target.files[0], "UTF-8");
+            fileReader.onload = (event) => {
+                try {
+                    const parsed = JSON.parse(event.target.result);
+
+                    // Support both legacy array format and new object format
+                    let filesToImport = [];
+                    if (Array.isArray(parsed)) {
+                        filesToImport = parsed;
+                    } else if (parsed && parsed.files && Array.isArray(parsed.files)) {
+                        filesToImport = parsed.files;
+                    }
+
+                    const standardized = filesToImport.map((item, idx) => ({
+                        id: item.id || Date.now() + idx,
+                        name: item.name || item.filename || 'Unknown File',
+                        checked: !!item.checked,
+                        notes: item.notes || '',
+                        priority: item.priority || 'medium',
+                        checkedAt: item.checkedAt || (item.checked ? new Date().toISOString() : null),
+                        hasChanges: !!item.hasChanges
+                    }));
+
+                    if (standardized.length > 0) {
+                        importFiles(standardized);
+                    } else {
+                        console.warn('No files found in imported JSON');
+                    }
+                } catch (err) {
+                    console.error('Invalid JSON file format', err);
+                }
+                // Reset input so same file can be selected again
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            };
+        }
     };
 
     return {

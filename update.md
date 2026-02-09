@@ -7,6 +7,7 @@
 - **Change Status Tracking**: Added `hasChanges` field to each file in the exported JSON
 - **Enhanced Metadata**: Export includes section name, total file count, and count of changed files
 - **Dynamic Filename**: Export filename now includes the section name (e.g., `checklist-src-components-2026-02-09.json`)
+- **Bug Fix**: Fixed import logic to support the new JSON structure with metadata
 - **Files Modified**: `src/hooks/useImportExport.js`, `src/hooks/useFileManager.js`
 
 ### JSON Export Format
